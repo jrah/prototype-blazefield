@@ -1,13 +1,10 @@
 const lightboxItems = document.querySelectorAll('.lightbox__item');
 
-for (let i = 0; i < lightboxItems.length; i++) {
-
+for (let i = 0; i < lightboxItems.length; i += 1) {
   const lightboxItem = lightboxItems[i];
-
-  lightboxItem.addEventListener('click', (e) => {
-
-    e.stopPropagation();
-    e.preventDefault();
+  lightboxItem.addEventListener('click', (event) => {
+    event.stopPropagation();
+    event.preventDefault();
     // const lightbox = document.querySelector('.lightbox');
     const body = document.body;
     // const thisItem = event.target.cloneNode(true);
@@ -19,7 +16,7 @@ for (let i = 0; i < lightboxItems.length; i++) {
     const overlay = document.createElement('div');
     const viewContent = document.createElement('img');
 
-    body.insertBefore(fullView, e.firstChild);
+    body.insertBefore(fullView, event.firstChild);
     body.insertBefore(overlay, body.firstChild);
     fullView.append(viewContent);
     fullView.classList.add('lighbox__item--fullview');
@@ -34,7 +31,5 @@ for (let i = 0; i < lightboxItems.length; i++) {
       e.stopPropagation();
       e.preventDefault();
     });
-
   });
-
 }
