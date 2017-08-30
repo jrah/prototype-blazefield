@@ -1,5 +1,13 @@
 {
-  "presets": ["babel-preset-es2015"],
+  "presets": ["env",{
+    "targets": {
+      "browsers": [
+        "last 2 versions",
+         ">3%"
+       ],
+
+    }
+    }],
   "compact": ["false"],
   "minified": ["false"],
   "retainLines": ["true"],
