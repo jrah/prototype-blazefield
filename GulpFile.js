@@ -1,8 +1,10 @@
-const gulp        = require('gulp');
+const gulp = require('gulp');
 const browserSync = require('browser-sync').create();
-const rename      = require('gulp-rename');
+const rename = require('gulp-rename');
+var del = require('del');
+
 // sass
-const sass        = require('gulp-sass');
+const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
 
@@ -11,71 +13,94 @@ const pump = require('pump');
 const uglify = require('gulp-uglify');
 const concat = require('gulp-concat');
 const babili = require("gulp-babili");
+const babel = require('gulp-babel');
 
 // images
 const imagemin = require('gulp-imagemin');
+var imageResize = require('gulp-image-resize');
 
 
 // Static Server + watching scss/html files
 gulp.task('serve', ['sass'], function() {
 
-    browserSync.init({
-        server: "./",
-        open: false
-    });
+  browserSync.init({
+    server: "./",
+    open: false
+  });
 
-    gulp.watch("src/**/*.scss", ['sass']);
-    gulp.watch("*.html").on('change', browserSync.reload);
-    gulp.watch("src/javascript/*.js", browserSync.reload);
+  gulp.watch("src/**/*.scss", ['sass']);
+  gulp.watch("*.html").on('change', browserSync.reload);
+  gulp.watch("src/javascript/*.js", browserSync.reload);
 });
 
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('sass', function() {
-     gulp.src("src/scss/*.scss")
-         .pipe(sass({
-           includePaths: [
-            './node_modules/tachyons-sass/'
-         ]
-       }))
-       .pipe(sourcemaps.init())
-       .pipe(sass().on('error', sass.logError))
-       .pipe(sourcemaps.write())
-        .pipe(gulp.dest("css"))
-        .pipe(browserSync.stream());
+  gulp.src("src/scss/*.scss")
+    .pipe(sass({
+      includePaths: [
+        './node_modules/tachyons-sass/'
+      ]
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(sass().on('error', sass.logError))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest("css"))
+    .pipe(browserSync.stream());
 });
 
 // build tasks
 
 gulp.task('image-build', function() {
-        gulp.src(['images/*.svg', 'images/*.jpg'])
-        .pipe(imagemin())
-        .pipe(gulp.dest('dist/images'))
+  gulp.src(['images/*.svg', 'images/*.jpg'])
+    .pipe(imagemin())
+    .pipe(gulp.dest('dist/images'))
 });
 
 gulp.task('sass-build', function() {
-     gulp.src("src/scss/*.scss")
-         .pipe(sass({
-           includePaths: [
-            './node_modules/tachyons-sass/'
-         ]
-       }))
-          .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
-            cascade: false
-        }))
-        .pipe(sass({outputStyle: 'compressed'}))
-        .pipe(rename('main.min.css'))
-        .pipe(gulp.dest('dist/css'))
+  gulp.src("src/scss/*.scss")
+    .pipe(sass({
+      includePaths: [
+        './node_modules/tachyons-sass/'
+      ]
+    }))
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false
+    }))
+    .pipe(sass({
+      outputStyle: 'compressed'
+    }))
+    .pipe(rename('main.min.css'))
+    .pipe(gulp.dest('dist/css'))
 });
 
-gulp.task('js-build', function () {
+gulp.task('js-build', function() {
   // pump helps locate errors better than `pipe`
   pump([
     gulp.src('src/javascript/*.js'),
-    babili(),
+    babel(
+      {
+        presets: ["babel-preset-es2015"],
+        compact: ["false"],
+        minified: ["false"],
+        retainLines: ["true"]
+      },
+    ),
+    gulp.dest('dist/js'),
     concat('app.min.js'),
     gulp.dest('dist/js')
   ])
+});
+
+gulp.task('image-resize', function() {
+  gulp.src('images/resize/*.*')
+    .pipe(imageResize({
+      width: 730,
+      height: 950,
+      crop: true,
+      upscale: false
+    }))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('default', ['serve']);
