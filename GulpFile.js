@@ -1,7 +1,6 @@
 const gulp = require('gulp');
 const browserSync = require('browser-sync').create();
 const rename = require('gulp-rename');
-var del = require('del');
 
 // sass
 const sass = require('gulp-sass');
