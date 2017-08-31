@@ -11,12 +11,10 @@
   function navigate(direction) {
     current.classList.remove('current');
     counter += direction;
-    if (direction === -1 &&
-      counter < 0) {
+    if (direction === -1 && counter < 0) {
       counter = amount - 1;
     }
-    if (direction === 1 &&
-      !items[counter]) {
+    if (direction === 1 && !items[counter]) {
       counter = 0;
     }
     current = items[counter];
@@ -24,6 +22,7 @@
   }
 
   navigate(0);
+
   next.addEventListener('click', () => {
     navigate(1);
   });
