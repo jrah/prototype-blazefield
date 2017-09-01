@@ -16,6 +16,15 @@
 
 // extra
 
+.m-auto {
+  &-l {
+    margin-left: auto;
+  }
+
+  &-r {
+    margin-right: auto;
+  }
+}
 
 body {
       font-family: 'Roboto', sans-serif;
