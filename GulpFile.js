@@ -77,14 +77,7 @@ gulp.task('js-build', function() {
   // pump helps locate errors better than `pipe`
   pump([
     gulp.src('src/javascript/*.js'),
-    babel(
-      {
-        presets: ["babel-preset-es2015"],
-        compact: ["false"],
-        minified: ["false"],
-        retainLines: ["true"]
-      },
-    ),
+    babel(),
     gulp.dest('dist/js'),
     concat('app.min.js'),
     gulp.dest('dist/js')
@@ -92,14 +85,14 @@ gulp.task('js-build', function() {
 });
 
 gulp.task('image-resize', function() {
-  gulp.src('images/resize/*.*')
+  gulp.src('src/images/foals-stallions/*.*')
     .pipe(imageResize({
-      width: 730,
+      width: 700,
       height: 950,
       crop: true,
       upscale: false
     }))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('images'));
 });
 
 gulp.task('default', ['serve']);
