@@ -40,8 +40,13 @@ top: 0;
       align-items: center;
     position: absolute;
     top: 0;
-    left: -0.75rem;
-    right: -0.75rem;
+    left: 0;
+    right: 0;
     height: 100%;
     z-index: 1000;
+}
+
+.carousel {
+      margin-left: -2rem;
+    margin-right: -2rem;
 }
